@@ -2,29 +2,34 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
 // 6.1 создание модели данных "Пользователь"
-const User = sequelize.define("User", {
+const User = sequelize.define(
+  "User",
+  {
     id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
     },
     name: {
-        type: DataTypes.STRING,
-        allowNull: false,
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,           // 6.2 проверить, что emauil уникальный
-        validate: {
-            isEmail: true,
-        },
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,             // 6.2 проверить уникальность email
+      validate: {
+        isEmail: true,
+      },
     },
     createdAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
     },
-    updatedAt: false,
-});
+  },
+  {
+    updatedAt: false
+  }
+);
 
 export default User;

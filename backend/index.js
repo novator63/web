@@ -2,7 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import sequelize from './config/db.js'; //4.1 Импортировать sequelize из db.js
-import "./models/User.js";
+import eventRoutes from './routes/eventRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 dotenv.config();
 
@@ -10,6 +11,9 @@ const app = express();          //2.1 создать объект приложе
 
 app.use(cors());                //2.2 настроить middleware
 app.use(express.json());
+
+app.use('/api/events', eventRoutes);
+app.use('/api/users', userRoutes);
 
 const PORT = process.env.PORT || 5000;      //2.3 определить порт, на котором будет работать сервер
 

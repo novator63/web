@@ -1,5 +1,5 @@
-import User from "./User";
-import Event from "./Event";
+import User from "./User.js";
+import Event from "./Event.js";
 
 User.hasMany(Event, {
     foreignKey: "createdBy",

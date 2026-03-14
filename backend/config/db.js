@@ -11,6 +11,7 @@ const sequelize = new Sequelize(    //3.4 создать объект sequelize 
         host: process.env.DB_HOST,   // Хост базы данных
         port: process.env.DB_PORT,   // Порт базы данных
         dialect: 'postgres',         // Диалект базы данных
+        logging: false,              // Отключить логирование SQL-запросов
     }
 );
 
