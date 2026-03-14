@@ -1,6 +1,7 @@
 import express from 'express';
 
 import { createEvent, getAllEvents, getEventById, updateEvent, deleteEvent } from '../controllers/eventController.js';
+import { checkEventLimit } from '../middleware/eventLimitMiddleware.js';
 
 const router = express.Router();
 
@@ -64,7 +65,7 @@ router.get('/:id', getEventById);
  *       200:
  *         description: Event created successfully
  */
-router.post('/', createEvent);
+router.post('/', checkEventLimit, createEvent);
 
 /**
  * @swagger
