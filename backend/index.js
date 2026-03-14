@@ -5,6 +5,7 @@ import sequelize from './config/db.js'; //4.1 Импортировать sequeli
 import eventRoutes from './routes/eventRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import { swaggerUi, swaggerSpec } from './swagger.js';
+import morgan from 'morgan';
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ const app = express();          //2.1 создать объект приложе
 
 app.use(cors());                //2.2 настроить middleware
 app.use(express.json());
+app.use(morgan(":method :url"));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
