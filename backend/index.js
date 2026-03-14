@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import sequelize from './config/db.js'; //4.1 Импортировать sequelize из db.js
+import "./models/User.js";
 
 dotenv.config();
 
@@ -23,6 +24,15 @@ sequelize.authenticate()  //4.1	вызвать sequelize.authenticate(), что�
   .catch((error) => {
     console.error('Unable to connect to the database:', error);
   });
+
+  sequelize.sync({ alter: true })   // 6.3 синхронизировать модель с базой данных 
+  .then(() => {
+    console.log('Database synchronized successfully.');
+  })
+  .catch((error) => {
+    console.error('Error synchronizing the database:', error);
+  }
+);
 
 app.listen(PORT, () => {                              //3.1 настроить прослушивание сервера на указанном порту
   console.log(`Server is running on port ${PORT}`);
