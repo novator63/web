@@ -1,8 +1,21 @@
 import { Event } from "../models/index.js";
+import { Op } from "sequelize";
 
 export const getAllEvents = async (req, res) => {
     try {
-        const events = await Event.findAll();
+        const { search } = req.query;
+        let whereClause = {};
+
+        if (search) {
+            whereClause = {
+                [Op.or]: [
+                    { title: { [Op.iLike]: `%${search}%` } },
+                    { description: { [Op.iLike]: `%${search}%` } },
+                ],
+            };
+        }
+
+        const events = await Event.findAll({ where: whereClause });
         res.status(200).json(events);
     } catch (error) {
         res.status(400).json({ message: "Failed to fetch events", error: error.message });
