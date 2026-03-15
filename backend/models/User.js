@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
+import bcrypt from "bcrypt";
 
 // 6.1 создание модели данных "Пользователь"
 const User = sequelize.define(
@@ -22,6 +23,10 @@ const User = sequelize.define(
         isEmail: true,
       },
     },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
@@ -29,7 +34,11 @@ const User = sequelize.define(
   },
   {
     updatedAt: false
-  }
+  },
 );
+
+User.beforeCreate(async (user) => {
+  user.password = await bcrypt.hash(user.password, 10);
+});
 
 export default User;
