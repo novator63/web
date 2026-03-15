@@ -1,29 +1,8 @@
 import express from 'express';
-import { createUser, getAllUsers } from '../controllers/userController.js';
+import { getAllUsers } from '../controllers/userController.js';
+import passport from 'passport';
 
 const router = express.Router();
-
-/**
- * @swagger
- * /api/users:
- *   post:
- *     summary: Create a new user
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               email:
- *                 type: string
- *     responses:
- *       200:
- *         description: User created successfully
- */
-router.post('/', createUser);
 
 /**
  * @swagger
@@ -33,7 +12,9 @@ router.post('/', createUser);
  *     responses:
  *       200:
  *         description: A list of users
+ *       401:
+ *         description: Unauthorized
  */
-router.get('/', getAllUsers);
+router.get('/', passport.authenticate('jwt', { session: false }), getAllUsers);
 
 export default router;

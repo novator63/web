@@ -2,6 +2,7 @@ import express from 'express';
 
 import { createEvent, getAllEvents, getEventById, updateEvent, deleteEvent } from '../controllers/eventController.js';
 import { checkEventLimit } from '../middleware/eventLimitMiddleware.js';
+import passport from 'passport';
 
 const router = express.Router();
 
@@ -36,10 +37,14 @@ router.get('/', getAllEvents);
  *     responses:
  *       200:
  *         description: Event found
+ *       401:
+ *         description: Unauthorized
  *       404:
  *         description: Event not found
  */
-router.get('/:id', getEventById);
+router.get(     // 3. Доступ к защищенным маршрутам должен требовать аутентификации.
+    '/:id', 
+    passport.authenticate('jwt', { session: false }), getEventById);
 
 /**
  * @swagger
@@ -62,10 +67,12 @@ router.get('/:id', getEventById);
  *               createdBy:
  *                 type: integer
  *     responses:
- *       200:
+ *       201:
  *         description: Event created successfully
+ *       401:
+ *         description: Unauthorized
  */
-router.post('/', checkEventLimit, createEvent);
+router.post('/', passport.authenticate('jwt', { session: false }), checkEventLimit, createEvent);
 
 /**
  * @swagger
@@ -81,10 +88,12 @@ router.post('/', checkEventLimit, createEvent);
  *     responses:
  *       200:
  *         description: Event updated successfully
+ *       401:
+ *         description: Unauthorized
  *       404:
  *         description: Event not found
  */
-router.put('/:id', updateEvent);
+router.put('/:id', passport.authenticate('jwt', { session: false }), updateEvent);
 
 /**
  * @swagger
@@ -100,9 +109,11 @@ router.put('/:id', updateEvent);
  *     responses:
  *       200:
  *         description: Event deleted successfully
+ *       401:
+ *         description: Unauthorized
  *       404:
  *         description: Event not found
  */
-router.delete('/:id', deleteEvent);
+router.delete('/:id', passport.authenticate('jwt', { session: false }), deleteEvent);
 
 export default router;

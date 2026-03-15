@@ -1,40 +1,45 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import sequelize from './config/db.js'; //4.1 Импортировать sequelize из db.js
+import sequelize from './config/db.js';
+import passport from "passport";
+import "./config/passport.js";
+
 import eventRoutes from './routes/eventRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+
 import { swaggerUi, swaggerSpec } from './swagger.js';
 import morgan from 'morgan';
 
 dotenv.config();
 
-const app = express();          //2.1 создать объект приложения app          
+const app = express();
 
-app.use(cors());                //2.2 настроить middleware
+app.use(cors());
 app.use(express.json());
 app.use(morgan(":method :url"));
+
+// 5. Реализован middleware для проверки авторизации
+app.use(passport.initialize());
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/api/events', eventRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
 
-const PORT = process.env.PORT || 5000;      //2.3 определить порт, на котором будет работать сервер
+const PORT = process.env.PORT || 5000;
 
-app.get('/', (req, res) => {                //2.4 добавить тестовый маршрут GET /, который возвращает JSON с сообщением "Hello, World!"
-  res.json({ message: 'Hello, World!' });   
-});
-
-sequelize.authenticate()  //4.1	вызвать sequelize.authenticate(), чтобы убедиться, что соединение установлено
+sequelize.authenticate()
   .then(() => {
-    console.log('Database connection has been established successfully.');  // 4.1 вывести сообщение в консоль при успешном подключении
+    console.log('Database connection has been established successfully.');
   })
   .catch((error) => {
     console.error('Unable to connect to the database:', error);
   });
 
-  sequelize.sync({ alter: true })   // 6.3 синхронизировать модель с базой данных 
+  sequelize.sync({ alter: true })
   .then(() => {
     console.log('Database synchronized successfully.');
   })
@@ -43,10 +48,10 @@ sequelize.authenticate()  //4.1	вызвать sequelize.authenticate(), что�
   }
 );
 
-app.listen(PORT, () => {                              //3.1 настроить прослушивание сервера на указанном порту
+app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 }).on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {                    //3.2 добавить обработку ошибок при запуске
+  if (err.code === 'EADDRINUSE') {
     console.error(`Port ${PORT} is already in use. Please choose a different port.`);
   } else {
     console.error('Server error:', err);

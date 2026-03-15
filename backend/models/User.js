@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 // 6.1 создание модели данных "Пользователь"
 const User = sequelize.define(
@@ -37,6 +37,7 @@ const User = sequelize.define(
   },
 );
 
+// 4. Хранение паролей должно быть безопасным (использование хеширования)
 User.beforeCreate(async (user) => {
   user.password = await bcrypt.hash(user.password, 10);
 });
