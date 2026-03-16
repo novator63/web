@@ -10,7 +10,8 @@
     Также создал отдельный контроллер authController.js. Так выглядит логичнее...
 */
 import express from "express";
-import { register, login } from "../controllers/authController.js";
+import { register, login, logout } from "../controllers/authController.js";
+import passport from "passport";
 
 
 const router = express.Router();
@@ -64,5 +65,27 @@ router.post("/register", register);
  *         description: Unauthorized
  */
 router.post("/login", login);
+
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: Logout a user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User logged out successfully
+ *       401:
+ *         description: Unauthorized
+ */
+router.post("/logout", passport.authenticate('jwt', { session: false }), logout);
 
 export default router;

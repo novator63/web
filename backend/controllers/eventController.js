@@ -38,10 +38,10 @@ export const getEventById = async (req, res) => {
 
 export const createEvent = async (req, res) => {
     try {
-        const { title, description, date, createdBy } = req.body;
+        const { title, description, date } = req.body;
 
-        if (!title || !date || !createdBy) {
-            return res.status(400).json({ message: "Title, date, and createdBy are required" });
+        if (!title || !date) {
+            return res.status(400).json({ message: "Title and date are required" });
         }
 
         const newEvent = await Event.create({ title, description, date, createdBy });
@@ -50,6 +50,11 @@ export const createEvent = async (req, res) => {
         res.status(400).json({ message: "Failed to create event", error: error.message });
     }
 };
+// TO DO брать информацию из jwt токена для операций. пользователь может работать только со своими событиями
+// брать информацию из payload токена, который передается в req.user после аутентификации через passport. 
+// И использовать эту информацию для создания, обновления и удаления событий, чтобы гарантировать, что пользователь
+// может работать только со своими событиями. Например, при создании события можно установить поле createdBy равным id пользователя из токена,
+// а при обновлении и удалении проверять, что событие принадлежит этому пользователю.
 
 export const updateEvent = async (req, res) => {
     try {
