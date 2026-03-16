@@ -44,7 +44,7 @@ export const createEvent = async (req, res) => {
             return res.status(400).json({ message: "Title and date are required" });
         }
 
-        const newEvent = await Event.create({ title, description, date, createdBy });
+        const newEvent = await Event.create({ title, description, date, createdBy: req.user.id });
         res.status(201).json(newEvent);
     } catch (error) {
         res.status(400).json({ message: "Failed to create event", error: error.message });
@@ -58,7 +58,7 @@ export const createEvent = async (req, res) => {
 
 export const updateEvent = async (req, res) => {
     try {
-        const event = await Event.findByPk(req.params.id);
+        const event = await Event.findOne({ where: { id: req.params.id, createdBy: req.user.id } });
 
         if (!event) {
             return res.status(404).json({ message: "Event not found" });
@@ -79,7 +79,7 @@ export const updateEvent = async (req, res) => {
 
 export const deleteEvent = async (req, res) => {
     try {
-        const event = await Event.findByPk(req.params.id);
+        const event = await Event.findOne({ where: { id: req.params.id, createdBy: req.user.id } });
 
         if (!event) {
             return res.status(404).json({ message: "Event not found" });

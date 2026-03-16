@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import BlacklistedToken from "../models/BlacklistedToken.js";
 
 dotenv.config();
 
@@ -80,6 +81,6 @@ export const logout = async (req, res) => {
 
     res.json({ message: "Logout successful" });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
