@@ -16,7 +16,7 @@ const options = {
             },
         ],
     },
-    apis: ["./routes/*.js"], // Путь к файлам с аннотациями Swagger
+    apis: ["./routes/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
