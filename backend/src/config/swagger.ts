@@ -15,6 +15,108 @@ const options = {
         description: 'Local server',
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+      schemas: {
+        ErrorResponse: {
+          type: 'object',
+          properties: {
+            message: { type: 'string', example: 'Server error' },
+            error: { type: 'string', example: 'Unknown error' },
+          },
+          required: ['message'],
+        },
+        AuthSuccess: {
+          type: 'object',
+          properties: {
+            message: {
+              type: 'string',
+              example: 'Authorization successful',
+            },
+            token: {
+              type: 'string',
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+            },
+          },
+          required: ['message', 'token'],
+        },
+        MessageResponse: {
+          type: 'object',
+          properties: {
+            message: {
+              type: 'string',
+              example: 'Operation completed successfully',
+            },
+          },
+          required: ['message'],
+        },
+        User: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            name: { type: 'string', example: 'Alice' },
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'alice@mail.com',
+            },
+            password: {
+              type: 'string',
+              nullable: true,
+              example: '$2b$10$z7f9kQ5v9h2Tq...',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              example: '2026-03-27T10:00:00.000Z',
+            },
+          },
+          required: ['id', 'name', 'email', 'createdAt'],
+        },
+        Event: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 7 },
+            title: { type: 'string', example: 'Team meetup' },
+            description: {
+              type: 'string',
+              nullable: true,
+              example: 'Discuss Q2 goals',
+            },
+            date: {
+              type: 'string',
+              format: 'date-time',
+              example: '2026-04-15T18:30:00.000Z',
+            },
+            createdBy: { type: 'integer', example: 1 },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              example: '2026-03-27T10:00:00.000Z',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              example: '2026-03-27T10:10:00.000Z',
+            },
+          },
+          required: [
+            'id',
+            'title',
+            'date',
+            'createdBy',
+            'createdAt',
+            'updatedAt',
+          ],
+        },
+      },
+    },
   },
   apis: ['./src/routes/*.ts', './dist/routes/*.js'],
 };
