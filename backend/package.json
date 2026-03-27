@@ -7,9 +7,18 @@
     "build": "tsc",
     "dev": "node --watch dist/index.js",
     "start": "node dist/index.js",
+    "prepare": "cd .. && git config core.hooksPath backend/.husky",
     "lint": "eslint .",
     "format": "prettier . --write",
     "check": "tsc --noEmit && eslint . && prettier . --check"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix"
+    ],
+    "*.{js,jsx,ts,tsx,json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -43,7 +52,9 @@
     "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.4.0",
+    "husky": "^9.1.7",
     "jiti": "^2.6.1",
+    "lint-staged": "^16.4.0",
     "prettier": "^3.8.1",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.57.2"
