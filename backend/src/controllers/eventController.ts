@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import type { RequestLike, ResponseLike } from '../types/http.js';
+import type { Request, Response } from 'express';
 import { Event as EventModel } from '../models/index.js';
 
 interface EventBody {
@@ -9,9 +9,9 @@ interface EventBody {
 }
 
 export const getAllEvents = async (
-  req: RequestLike,
-  res: ResponseLike,
-): Promise<ResponseLike | void> => {
+  req: Request,
+  res: Response,
+): Promise<Response | void> => {
   try {
     const search = req.query.search;
     const whereClause = search
@@ -33,9 +33,9 @@ export const getAllEvents = async (
 };
 
 export const getEventById = async (
-  req: RequestLike,
-  res: ResponseLike,
-): Promise<ResponseLike | void> => {
+  req: Request,
+  res: Response,
+): Promise<Response | void> => {
   try {
     const event = await EventModel.findByPk(Number(req.params.id));
     if (!event) return res.status(404).json({ message: 'Event not found' });
@@ -49,9 +49,9 @@ export const getEventById = async (
 };
 
 export const createEvent = async (
-  req: RequestLike,
-  res: ResponseLike,
-): Promise<ResponseLike | void> => {
+  req: Request,
+  res: Response,
+): Promise<Response | void> => {
   try {
     const { title, description, date } = req.body as EventBody;
     if (!title || !date || !req.user?.id)
@@ -72,9 +72,9 @@ export const createEvent = async (
 };
 
 export const updateEvent = async (
-  req: RequestLike,
-  res: ResponseLike,
-): Promise<ResponseLike | void> => {
+  req: Request,
+  res: Response,
+): Promise<Response | void> => {
   try {
     const event = await EventModel.findOne({
       where: { id: Number(req.params.id), createdBy: req.user?.id },
@@ -98,9 +98,9 @@ export const updateEvent = async (
 };
 
 export const deleteEvent = async (
-  req: RequestLike,
-  res: ResponseLike,
-): Promise<ResponseLike | void> => {
+  req: Request,
+  res: Response,
+): Promise<Response | void> => {
   try {
     const event = await EventModel.findOne({
       where: { id: Number(req.params.id), createdBy: req.user?.id },

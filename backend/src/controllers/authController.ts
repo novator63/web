@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
+import type { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import type { RequestLike, ResponseLike } from '../types/http.js';
 import BlacklistedToken from '../models/BlacklistedToken.js';
 import User from '../models/User.js';
 
@@ -16,9 +16,9 @@ interface AuthBody {
 const jwtSecret = process.env.JWT_SECRET ?? '';
 
 export const register = async (
-  req: RequestLike,
-  res: ResponseLike,
-): Promise<ResponseLike | void> => {
+  req: Request,
+  res: Response,
+): Promise<Response | void> => {
   const { email, name, password } = req.body as AuthBody;
   if (!email || !name || !password)
     return res.status(400).json({ message: 'Fill in all fields' });
@@ -34,15 +34,16 @@ export const register = async (
 };
 
 export const login = async (
-  req: RequestLike,
-  res: ResponseLike,
-): Promise<ResponseLike | void> => {
+  req: Request,
+  res: Response,
+): Promise<Response | void> => {
   const { email, password } = req.body as AuthBody;
   if (!email || !password)
     return res.status(400).json({ message: 'Fill in all fields' });
   try {
     const user = await User.findOne({ where: { email } });
-    if (!user) return res.status(400).json({ message: 'User not found' });
+    if (!user || !user.password)
+      return res.status(400).json({ message: 'User not found' });
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid password' });
     const token = jwt.sign(
@@ -57,9 +58,9 @@ export const login = async (
 };
 
 export const logout = async (
-  req: RequestLike,
-  res: ResponseLike,
-): Promise<ResponseLike | void> => {
+  req: Request,
+  res: Response,
+): Promise<Response | void> => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {

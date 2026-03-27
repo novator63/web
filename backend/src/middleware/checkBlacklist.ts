@@ -1,15 +1,11 @@
-import type {
-  NextFunctionLike,
-  RequestLike,
-  ResponseLike,
-} from '../types/http.js';
+import type { NextFunction, Request, Response } from 'express';
 import BlacklistedToken from '../models/BlacklistedToken.js';
 
 const checkBlacklist = async (
-  req: RequestLike,
-  res: ResponseLike,
-  next: NextFunctionLike,
-): Promise<ResponseLike | void> => {
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<Response | void> => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {

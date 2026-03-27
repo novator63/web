@@ -1,6 +1,7 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import passport from 'passport';
 import sequelize from './config/db.js';
@@ -13,9 +14,15 @@ import userRoutes from './routes/userRoutes.js';
 dotenv.config();
 
 const app = express();
+const jsonParser = express.json();
 
 app.use(cors());
-app.use(express.json());
+app.use((req, res, next) => {
+  if (!['POST', 'PUT', 'PATCH'].includes(req.method)) {
+    return next();
+  }
+  return jsonParser(req, res, next);
+});
 app.use(morgan(':method :url'));
 app.use(passport.initialize());
 
@@ -23,6 +30,19 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/users', userRoutes);
+app.use(
+  (
+    error: unknown,
+    _req: Request,
+    res: Response,
+    next: NextFunction,
+  ): void | Response => {
+    if (error instanceof SyntaxError && 'body' in error) {
+      return res.status(400).json({ message: 'Invalid JSON payload' });
+    }
+    return next(error);
+  },
+);
 
 const PORT = Number(process.env.PORT) || 5000;
 

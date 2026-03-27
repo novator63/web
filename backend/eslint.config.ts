@@ -6,8 +6,10 @@ import prettierConfig from 'eslint-config-prettier';
 
 export default defineConfig([
   {
-    files: ['**/*.{js,mjs,cjs,ts,mts,cts}'],
     ignores: ['dist/**', 'node_modules/**'],
+  },
+  {
+    files: ['**/*.{js,mjs,cjs,ts,mts,cts}'],
     languageOptions: {
       globals: globals.node,
       ecmaVersion: 'latest',

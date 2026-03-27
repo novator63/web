@@ -1,16 +1,12 @@
 import { Op } from 'sequelize';
-import type {
-  NextFunctionLike,
-  RequestLike,
-  ResponseLike,
-} from '../types/http.js';
+import type { NextFunction, Request, Response } from 'express';
 import { Event } from '../models/index.js';
 
 export const checkEventLimit = async (
-  req: RequestLike,
-  res: ResponseLike,
-  next: NextFunctionLike,
-): Promise<ResponseLike | void> => {
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<Response | void> => {
   try {
     const createdBy = req.user?.id;
     if (!createdBy)

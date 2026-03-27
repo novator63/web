@@ -12,7 +12,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: CreationOptional<number>;
   declare name: string;
   declare email: string;
-  declare password: string;
+  declare password: CreationOptional<string | null>;
   declare createdAt: CreationOptional<Date>;
 }
 
@@ -37,7 +37,7 @@ User.init(
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -52,7 +52,9 @@ User.init(
 );
 
 User.beforeCreate(async (user: User) => {
-  user.password = await bcrypt.hash(user.password, 10);
+  if (user.password) {
+    user.password = await bcrypt.hash(user.password, 10);
+  }
 });
 
 export default User;

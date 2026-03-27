@@ -1,4 +1,4 @@
-import type { RequestLike, ResponseLike } from '../types/http.js';
+import type { Request, Response } from 'express';
 import { User } from '../models/index.js';
 
 interface UserBody {
@@ -7,9 +7,9 @@ interface UserBody {
 }
 
 export const createUser = async (
-  req: RequestLike,
-  res: ResponseLike,
-): Promise<ResponseLike | void> => {
+  req: Request,
+  res: Response,
+): Promise<Response | void> => {
   try {
     const { name, email } = req.body as UserBody;
     if (!name || !email)
@@ -20,7 +20,6 @@ export const createUser = async (
     const newUser = await User.create({
       name,
       email,
-      password: 'temporary-password',
     });
     return res.status(201).json(newUser);
   } catch (error) {
@@ -32,9 +31,9 @@ export const createUser = async (
 };
 
 export const getAllUsers = async (
-  _req: RequestLike,
-  res: ResponseLike,
-): Promise<ResponseLike | void> => {
+  _req: Request,
+  res: Response,
+): Promise<Response | void> => {
   try {
     const users = await User.findAll();
     return res.status(200).json(users);
