@@ -6,9 +6,9 @@ import {
   getAllEvents,
   getEventById,
   updateEvent,
-} from '../controllers/eventController.js';
-import checkBlacklist from '../middleware/checkBlacklist.js';
-import { checkEventLimit } from '../middleware/eventLimitMiddleware.js';
+} from '@controllers/eventController.js';
+import checkBlacklist from '@middleware/checkBlacklist.js';
+import { checkEventLimit } from '@middleware/eventLimitMiddleware.js';
 
 const router = express.Router();
 

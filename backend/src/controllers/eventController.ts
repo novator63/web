@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 import type { Request, Response } from 'express';
-import { Event as EventModel } from '../models/index.js';
+import { Event as EventModel } from '@models/index.js';
 
 interface EventBody {
   title?: string;

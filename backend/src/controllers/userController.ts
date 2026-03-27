@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { User } from '../models/index.js';
+import { User } from '@models/index.js';
 
 interface UserBody {
   name?: string;

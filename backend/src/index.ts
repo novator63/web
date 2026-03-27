@@ -4,12 +4,12 @@ import express from 'express';
 import type { NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import passport from 'passport';
-import sequelize from './config/db.js';
-import './config/passport.js';
-import { swaggerSpec, swaggerUi } from './config/swagger.js';
-import authRoutes from './routes/authRoutes.js';
-import eventRoutes from './routes/eventRoutes.js';
-import userRoutes from './routes/userRoutes.js';
+import sequelize from '@config/db.js';
+import '@config/passport.js';
+import { swaggerSpec, swaggerUi } from '@config/swagger.js';
+import authRoutes from '@routes/authRoutes.js';
+import eventRoutes from '@routes/eventRoutes.js';
+import userRoutes from '@routes/userRoutes.js';
 
 dotenv.config();
 

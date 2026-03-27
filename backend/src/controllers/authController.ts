@@ -2,8 +2,8 @@ import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import type { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import BlacklistedToken from '../models/BlacklistedToken.js';
-import User from '../models/User.js';
+import BlacklistedToken from '@models/BlacklistedToken.js';
+import User from '@models/User.js';
 
 dotenv.config();
 

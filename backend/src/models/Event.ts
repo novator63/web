@@ -5,7 +5,7 @@ import {
   InferCreationAttributes,
   Model,
 } from 'sequelize';
-import sequelize from '../config/db.js';
+import sequelize from '@config/db.js';
 
 class Event extends Model<
   InferAttributes<Event>,
