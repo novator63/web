@@ -15,7 +15,7 @@ passport.use(
     options,
     async (
       payload: { id: number },
-      done: (error: Error | null, user: unknown) => void,
+      done: (error: Error | null, user: Express.User | false) => void,
     ) => {
       try {
         const user = await User.findByPk(payload.id);

@@ -32,7 +32,7 @@ app.use('/api/events', eventRoutes);
 app.use('/api/users', userRoutes);
 app.use(
   (
-    error: unknown,
+    error: Error & { body?: string },
     _req: Request,
     res: Response,
     next: NextFunction,
@@ -51,7 +51,7 @@ sequelize
   .then(() => {
     console.log('Database connection has been established successfully.');
   })
-  .catch((error: unknown) => {
+  .catch((error: Error) => {
     console.error('Unable to connect to the database:', error);
   });
 
@@ -60,7 +60,7 @@ sequelize
   .then(() => {
     console.log('Database synchronized successfully.');
   })
-  .catch((error: unknown) => {
+  .catch((error: Error) => {
     console.error('Error synchronizing the database:', error);
   });
 
