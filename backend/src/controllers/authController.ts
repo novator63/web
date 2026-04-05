@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import type { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { getJwtSecret } from '@config/env.js';
 import BlacklistedToken from '@models/BlacklistedToken.js';
 import User from '@models/User.js';
 
@@ -13,7 +14,7 @@ interface AuthBody {
   password?: string;
 }
 
-const jwtSecret = process.env.JWT_SECRET ?? '';
+const jwtSecret = getJwtSecret();
 
 export const register = async (
   req: Request,
@@ -25,7 +26,9 @@ export const register = async (
   try {
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser)
-      return res.status(400).json({ message: 'Email is already in use' });
+      return res
+        .status(400)
+        .json({ message: 'Unable to register with provided data' });
     await User.create({ email, name, password });
     return res.status(201).json({ message: 'Registration successful' });
   } catch {
@@ -41,11 +44,12 @@ export const login = async (
   if (!email || !password)
     return res.status(400).json({ message: 'Fill in all fields' });
   try {
-    const user = await User.findOne({ where: { email } });
+    const user = await User.scope('withPassword').findOne({ where: { email } });
     if (!user || !user.password)
-      return res.status(400).json({ message: 'User not found' });
+      return res.status(401).json({ message: 'Invalid email or password' });
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid password' });
+    if (!isMatch)
+      return res.status(401).json({ message: 'Invalid email or password' });
     const token = jwt.sign(
       { id: user.id, email: user.email, name: user.name },
       jwtSecret,
@@ -70,8 +74,7 @@ export const logout = async (
     jwt.verify(token, jwtSecret);
     await BlacklistedToken.create({ token, createdAt: new Date() });
     return res.json({ message: 'Logout successful' });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return res.status(500).json({ message: 'Server error', error: message });
+  } catch {
+    return res.status(500).json({ message: 'Server error' });
   }
 };

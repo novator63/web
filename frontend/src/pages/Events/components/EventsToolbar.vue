@@ -8,11 +8,7 @@
 				:model-value="search"
 				@update:model-value="$emit('update:search', $event)"
 			/>
-			<BaseButton
-				variant="ghost"
-				:disabled="loading"
-				@click="$emit('update:search', '')"
-			>
+			<BaseButton variant="ghost" :disabled="loading" @click="$emit('update:search', '')">
 				Очистить
 			</BaseButton>
 			<BaseButton variant="secondary" :disabled="loading" @click="$emit('refresh')">

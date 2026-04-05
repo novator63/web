@@ -1,5 +1,6 @@
 import { Op } from 'sequelize';
 import type { Request, Response } from 'express';
+import { getAdminEmails } from '@config/env.js';
 import { Event as EventModel } from '@models/index.js';
 
 interface EventBody {
@@ -14,12 +15,14 @@ export const getAllEvents = async (
 ): Promise<Response | void> => {
   try {
     const userId = req.user?.id;
-    if (!userId)
-      return res.status(401).json({ message: 'Unauthorized' });
+    const userEmail = req.user?.email?.toLowerCase();
+    if (!userId) return res.status(401).json({ message: 'Unauthorized' });
+
+    const isAdmin = Boolean(userEmail && getAdminEmails().includes(userEmail));
 
     const search = req.query.search;
     const whereClause = {
-      createdBy: userId,
+      ...(isAdmin ? {} : { createdBy: userId }),
       ...(search
         ? {
             [Op.or]: [
@@ -37,11 +40,8 @@ export const getAllEvents = async (
       ],
     });
     return res.status(200).json(events);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return res
-      .status(400)
-      .json({ message: 'Failed to fetch events', error: message });
+  } catch {
+    return res.status(400).json({ message: 'Failed to fetch events' });
   }
 };
 
@@ -51,19 +51,15 @@ export const getEventById = async (
 ): Promise<Response | void> => {
   try {
     const userId = req.user?.id;
-    if (!userId)
-      return res.status(401).json({ message: 'Unauthorized' });
+    if (!userId) return res.status(401).json({ message: 'Unauthorized' });
 
     const event = await EventModel.findOne({
       where: { id: Number(req.params.id), createdBy: userId },
     });
     if (!event) return res.status(404).json({ message: 'Event not found' });
     return res.status(200).json(event);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return res
-      .status(400)
-      .json({ message: 'Failed to fetch event', error: message });
+  } catch {
+    return res.status(400).json({ message: 'Failed to fetch event' });
   }
 };
 
@@ -82,11 +78,8 @@ export const createEvent = async (
       createdBy: req.user.id,
     });
     return res.status(201).json(newEvent);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return res
-      .status(400)
-      .json({ message: 'Failed to create event', error: message });
+  } catch {
+    return res.status(400).json({ message: 'Failed to create event' });
   }
 };
 
@@ -108,11 +101,8 @@ export const updateEvent = async (
       date: new Date(date),
     });
     return res.status(200).json(event);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return res
-      .status(400)
-      .json({ message: 'Failed to update event', error: message });
+  } catch {
+    return res.status(400).json({ message: 'Failed to update event' });
   }
 };
 
@@ -127,10 +117,7 @@ export const deleteEvent = async (
     if (!event) return res.status(404).json({ message: 'Event not found' });
     await event.destroy();
     return res.status(200).json({ message: 'Event deleted successfully' });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return res
-      .status(400)
-      .json({ message: 'Failed to delete event', error: message });
+  } catch {
+    return res.status(400).json({ message: 'Failed to delete event' });
   }
 };

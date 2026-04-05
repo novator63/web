@@ -23,6 +23,14 @@
 				<nav id="header-menu" :class="[$style.nav, { [$style.navOpen]: isMenuOpen }]">
 					<RouterLink to="/" :class="$style.link" @click="closeMenu">Главная</RouterLink>
 					<RouterLink to="/events" :class="$style.link" @click="closeMenu">События</RouterLink>
+					<RouterLink
+						v-if="authStore.isAuthenticated && authStore.isAdmin"
+						to="/users"
+						:class="$style.link"
+						@click="closeMenu"
+					>
+						Пользователи
+					</RouterLink>
 
 					<div v-if="!authStore.isAuthenticated" :class="$style.actions">
 						<BaseButton variant="ghost" to="/login" @click="closeMenu">Вход</BaseButton>

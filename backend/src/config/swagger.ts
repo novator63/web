@@ -28,7 +28,6 @@ const options = {
           type: 'object',
           properties: {
             message: { type: 'string', example: 'Server error' },
-            error: { type: 'string', example: 'Unknown error' },
           },
           required: ['message'],
         },
@@ -65,11 +64,6 @@ const options = {
               type: 'string',
               format: 'email',
               example: 'alice@mail.com',
-            },
-            password: {
-              type: 'string',
-              nullable: true,
-              example: '$2b$10$z7f9kQ5v9h2Tq...',
             },
             createdAt: {
               type: 'string',

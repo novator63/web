@@ -6,11 +6,7 @@
 		</template>
 		<template v-else>
 			<BaseButton to="/events" variant="primary">Список мероприятий</BaseButton>
-			<BaseButton
-				variant="secondary"
-				:disabled="authStore.isLoggingOut"
-				@click="handleLogout"
-			>
+			<BaseButton variant="secondary" :disabled="authStore.isLoggingOut" @click="handleLogout">
 				{{ authStore.isLoggingOut ? 'Выходим…' : 'Выйти' }}
 			</BaseButton>
 		</template>

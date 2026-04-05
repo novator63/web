@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 
 import { authService } from '../api/authService'
 import type { User } from '../types/user'
+import { isAdminEmail } from '../utils/admin'
 import { getToken, hasToken } from '../utils/token'
 import { getUserFromToken } from '../utils/auth'
 
@@ -20,6 +21,9 @@ export const useAuthStore = defineStore('auth', {
 			return token ? getUserFromToken(token) : null
 		})(),
 	}),
+	getters: {
+		isAdmin: (state): boolean => isAdminEmail(state.user?.email),
+	},
 	actions: {
 		syncAuthState(): void {
 			const token = getToken()

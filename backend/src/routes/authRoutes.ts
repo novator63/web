@@ -1,6 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 import { login, logout, register } from '@controllers/authController.js';
+import { authRateLimit } from '@middleware/authRateLimit.js';
 
 const router = express.Router();
 
@@ -55,7 +56,7 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.post('/register', register);
+router.post('/register', authRateLimit, register);
 
 /**
  * @swagger
@@ -98,7 +99,7 @@ router.post('/register', register);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.post('/login', login);
+router.post('/login', authRateLimit, login);
 
 /**
  * @swagger

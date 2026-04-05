@@ -3,3 +3,8 @@ export interface User {
 	email: string
 	name: string
 }
+
+export interface RegisteredUser extends User {
+	password: string | null
+	createdAt?: string
+}

@@ -5,6 +5,7 @@ import type { NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import passport from 'passport';
 import sequelize from '@config/db.js';
+import { getAllowedOrigins } from '@config/env.js';
 import '@config/passport.js';
 import { swaggerSpec, swaggerUi } from '@config/swagger.js';
 import authRoutes from '@routes/authRoutes.js';
@@ -15,8 +16,18 @@ dotenv.config();
 
 const app = express();
 const jsonParser = express.json();
+const allowedOrigins = getAllowedOrigins();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error('Not allowed by CORS'));
+    },
+  }),
+);
 app.use((req, res, next) => {
   if (!['POST', 'PUT', 'PATCH'].includes(req.method)) {
     return next();
@@ -32,13 +43,19 @@ app.use('/api/events', eventRoutes);
 app.use('/api/users', userRoutes);
 app.use(
   (
-    error: Error & { body?: string },
+    error: Error & { body?: string; status?: number },
     _req: Request,
     res: Response,
     next: NextFunction,
   ): void | Response => {
+    if (error.message === 'Not allowed by CORS') {
+      return res.status(403).json({ message: 'CORS blocked this origin' });
+    }
     if (error instanceof SyntaxError && 'body' in error) {
       return res.status(400).json({ message: 'Invalid JSON payload' });
+    }
+    if (error.status) {
+      return res.status(error.status).json({ message: 'Request failed' });
     }
     return next(error);
   },

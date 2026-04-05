@@ -22,11 +22,8 @@ export const createUser = async (
       email,
     });
     return res.status(201).json(newUser);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return res
-      .status(400)
-      .json({ message: 'Failed to create user', error: message });
+  } catch {
+    return res.status(400).json({ message: 'Failed to create user' });
   }
 };
 
@@ -35,12 +32,15 @@ export const getAllUsers = async (
   res: Response,
 ): Promise<Response | void> => {
   try {
-    const users = await User.findAll();
+    const users = await User.unscoped().findAll({
+      attributes: ['id', 'name', 'email', 'password', 'createdAt'],
+      order: [
+        ['createdAt', 'DESC'],
+        ['id', 'DESC'],
+      ],
+    });
     return res.status(200).json(users);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return res
-      .status(400)
-      .json({ message: 'Failed to fetch users', error: message });
+  } catch {
+    return res.status(400).json({ message: 'Failed to fetch users' });
   }
 };
