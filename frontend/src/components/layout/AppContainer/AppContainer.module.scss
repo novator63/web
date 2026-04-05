@@ -1,0 +1,5 @@
+@use '../../../assets/styles/mixins.scss' as *;
+
+.root {
+	@include container;
+}

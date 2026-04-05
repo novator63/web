@@ -1,0 +1,22 @@
+@use '../../assets/styles/mixins.scss' as *;
+
+.root {
+	display: grid;
+	place-items: start;
+}
+
+.card {
+	@include card;
+	width: 100%;
+	max-width: 520px;
+	padding: 18px;
+}
+
+.title {
+	margin: 0;
+	font-size: 24px;
+}
+
+.subtitle {
+	margin: 6px 0 0;
+}

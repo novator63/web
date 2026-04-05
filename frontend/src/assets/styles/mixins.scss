@@ -1,0 +1,20 @@
+@use './variables.scss' as *;
+
+@mixin container {
+	max-width: $container-max;
+	margin: 0 auto;
+	padding: 0 $container-pad;
+}
+
+@mixin card {
+	background: $color-surface;
+	border: 1px solid $color-border;
+	border-radius: $radius-md;
+}
+
+@mixin focusable {
+	&:focus-visible {
+		outline: none;
+		box-shadow: $focus-ring;
+	}
+}

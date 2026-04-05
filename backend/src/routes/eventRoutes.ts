@@ -25,6 +25,8 @@ const router = express.Router();
  *   get:
  *     summary: Get all events
  *     tags: [Events]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: search
@@ -42,6 +44,12 @@ const router = express.Router();
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Event'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MessageResponse'
  *       400:
  *         description: Failed to fetch events
  *         content:
@@ -49,7 +57,12 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.get('/', getAllEvents);
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  checkBlacklist,
+  getAllEvents,
+);
 
 /**
  * @swagger

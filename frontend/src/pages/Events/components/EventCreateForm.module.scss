@@ -1,0 +1,23 @@
+@use '../../../assets/styles/variables.scss' as *;
+
+.root {
+	display: grid;
+	gap: 12px;
+}
+
+.fields {
+	display: grid;
+	gap: 12px;
+	grid-template-columns: 1fr 1fr;
+}
+
+.actions {
+	display: flex;
+	justify-content: flex-end;
+}
+
+@media (max-width: 720px) {
+	.fields {
+		grid-template-columns: 1fr;
+	}
+}

@@ -1,0 +1,21 @@
+@use '../../../assets/styles/variables.scss' as *;
+
+.root {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+
+.title {
+	margin: 0;
+	font-size: 26px;
+	letter-spacing: 0.2px;
+}
+
+.actions {
+	display: inline-flex;
+	gap: 10px;
+	align-items: center;
+}

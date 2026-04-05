@@ -1,0 +1,55 @@
+@use '../../../assets/styles/variables.scss' as *;
+@use '../../../assets/styles/mixins.scss' as *;
+
+.button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 10px 14px;
+	border-radius: $radius-sm;
+	border: 1px solid transparent;
+	cursor: pointer;
+	font-weight: 600;
+	line-height: 1;
+	transition:
+		background-color 120ms ease,
+		border-color 120ms ease,
+		opacity 120ms ease;
+	user-select: none;
+	@include focusable;
+}
+
+.button:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.primary {
+	background: $color-primary;
+	color: $color-bg;
+}
+
+.primary:hover {
+	background: $color-primary-500;
+}
+
+.secondary {
+	background: transparent;
+	border-color: $color-border;
+	color: $color-text;
+}
+
+.secondary:hover {
+	border-color: rgba(44, 74, 82, 0.35);
+	background: rgba(244, 235, 219, 0.55);
+}
+
+.ghost {
+	background: transparent;
+	color: $color-text;
+}
+
+.ghost:hover {
+	background: rgba(44, 74, 82, 0.08);
+}

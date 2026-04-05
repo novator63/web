@@ -1,13 +1,18 @@
 <template>
-  <div class="not-found-page">
-    <h1>404 - Страница не найдена</h1>
-    <p>Извините, запрашиваемая страница не существует.</p>
-    <div class="button-group">
-      <RouterLink to="/" class="btn btn-primary">На главную</RouterLink>
-    </div>
-  </div>
+	<div :class="$style.root">
+		<section :class="$style.card">
+			<ErrorMessage code="404" message="Страница не найдена" />
+			<p>Проверьте адрес или вернитесь на главную.</p>
+			<div :class="$style.actions">
+				<BaseButton to="/" variant="primary">На главную</BaseButton>
+			</div>
+		</section>
+	</div>
 </template>
 
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import BaseButton from '../../components/ui/BaseButton/BaseButton.vue'
+import ErrorMessage from '../../components/ui/ErrorMessage/ErrorMessage.vue'
 </script>
+
+<style module lang="scss" src="./NotFoundPage.module.scss" />

@@ -13,16 +13,29 @@ export const getAllEvents = async (
   res: Response,
 ): Promise<Response | void> => {
   try {
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(401).json({ message: 'Unauthorized' });
+
     const search = req.query.search;
-    const whereClause = search
-      ? {
-          [Op.or]: [
-            { title: { [Op.iLike]: `%${search}%` } },
-            { description: { [Op.iLike]: `%${search}%` } },
-          ],
-        }
-      : {};
-    const events = await EventModel.findAll({ where: whereClause });
+    const whereClause = {
+      createdBy: userId,
+      ...(search
+        ? {
+            [Op.or]: [
+              { title: { [Op.iLike]: `%${search}%` } },
+              { description: { [Op.iLike]: `%${search}%` } },
+            ],
+          }
+        : {}),
+    };
+    const events = await EventModel.findAll({
+      where: whereClause,
+      order: [
+        ['date', 'ASC'],
+        ['id', 'ASC'],
+      ],
+    });
     return res.status(200).json(events);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
@@ -37,7 +50,13 @@ export const getEventById = async (
   res: Response,
 ): Promise<Response | void> => {
   try {
-    const event = await EventModel.findByPk(Number(req.params.id));
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(401).json({ message: 'Unauthorized' });
+
+    const event = await EventModel.findOne({
+      where: { id: Number(req.params.id), createdBy: userId },
+    });
     if (!event) return res.status(404).json({ message: 'Event not found' });
     return res.status(200).json(event);
   } catch (error) {

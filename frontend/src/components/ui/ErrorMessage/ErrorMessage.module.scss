@@ -1,0 +1,30 @@
+@use '../../../assets/styles/variables.scss' as *;
+@use '../../../assets/styles/mixins.scss' as *;
+
+.root {
+	@include card;
+	padding: 12px 14px;
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 10px;
+	align-items: start;
+	border-color: rgba(164, 65, 65, 0.35);
+}
+
+.code {
+	min-width: 44px;
+	height: 28px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 999px;
+	background: rgba(164, 65, 65, 0.12);
+	color: rgba(164, 65, 65, 0.95);
+	font-weight: 700;
+	font-size: 13px;
+}
+
+.message {
+	font-size: 14px;
+	color: $color-text;
+}
