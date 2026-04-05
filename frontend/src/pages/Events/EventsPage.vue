@@ -1,7 +1,12 @@
 <template>
 	<div :class="$style.root">
 		<section :class="$style.section">
-			<EventsToolbar :loading="loading" @refresh="loadEvents" />
+			<EventsToolbar
+				:loading="loading"
+				:search="searchQuery"
+				@update:search="searchQuery = $event"
+				@refresh="loadEvents"
+			/>
 		</section>
 
 		<section v-if="error" :class="$style.section">
@@ -29,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import { eventService } from '../../api/eventService'
 import ErrorMessage from '../../components/ui/ErrorMessage/ErrorMessage.vue'
@@ -49,19 +54,39 @@ const creating = ref(false)
 const deletingId = ref<number | null>(null)
 const error = ref<UiError | null>(null)
 const info = ref('')
+const searchQuery = ref('')
+const normalizedSearch = computed(() => searchQuery.value.trim())
+
+let searchDebounceTimer: ReturnType<typeof setTimeout> | null = null
 
 const loadEvents = async (): Promise<void> => {
 	loading.value = true
 	error.value = null
 
 	try {
-		events.value = await eventService.getEvents()
+		events.value = await eventService.getEvents(normalizedSearch.value)
 	} catch (e) {
 		error.value = getErrorMessage(e, 'Не удалось загрузить события')
 	} finally {
 		loading.value = false
 	}
 }
+
+watch(searchQuery, () => {
+	if (searchDebounceTimer) {
+		clearTimeout(searchDebounceTimer)
+	}
+
+	searchDebounceTimer = setTimeout(() => {
+		void loadEvents()
+	}, 700)
+})
+
+onBeforeUnmount(() => {
+	if (searchDebounceTimer) {
+		clearTimeout(searchDebounceTimer)
+	}
+})
 
 const handleCreate = async (payload: EventPayload): Promise<void> => {
 	creating.value = true
