@@ -4,7 +4,7 @@
 		<div>
 			<h1 :class="$style.title">TM</h1>
 			<p :class="$style.subtitle">Task Manager - сайт для управления мероприятиями.</p>
-			<p :class="$style.desc">Создавайте события и просматривайте общий список.</p>
+			<p :class="$style.desc">Создавайте, планируйте и управляйте своими мероприятиями.</p>
 		</div>
 	</section>
 </template>
