@@ -25,6 +25,11 @@ passport.use(
             id: user.id,
             email: user.email,
             name: user.name,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            middleName: user.middleName,
+            gender: user.gender,
+            birthDate: user.birthDate,
           });
         }
         return done(null, false);

@@ -4,6 +4,11 @@ declare global {
       id: number;
       email: string;
       name: string;
+      firstName: string;
+      lastName: string;
+      middleName: string | null;
+      gender: 'male' | 'female';
+      birthDate: string;
     }
 
     interface Request {

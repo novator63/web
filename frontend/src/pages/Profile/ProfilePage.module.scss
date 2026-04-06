@@ -18,6 +18,14 @@
 	font-size: 24px;
 }
 
+.profileHeader {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+
 .subtitle {
 	margin: 0;
 	font-size: 20px;
@@ -34,11 +42,49 @@
 	gap: 8px;
 }
 
+.profileForm {
+	display: grid;
+	gap: 12px;
+}
+
+.profileActions {
+	display: flex;
+	justify-content: flex-start;
+}
+
 .row {
 	display: flex;
 	gap: 8px;
 	flex-wrap: wrap;
 	font-size: 16px;
+}
+
+.selectField {
+	display: grid;
+	gap: 6px;
+}
+
+.selectLabel {
+	font-size: 13px;
+	font-weight: 600;
+	color: $color-muted;
+}
+
+.select {
+	padding: 10px 12px;
+	border-radius: $radius-sm;
+	border: 1px solid $color-border;
+	background: $color-surface;
+	color: $color-text;
+}
+
+.selectInvalid {
+	border-color: rgba(164, 65, 65, 0.55);
+}
+
+.fieldError {
+	font-size: 13px;
+	color: rgba(164, 65, 65, 0.95);
 }
 
 .label {

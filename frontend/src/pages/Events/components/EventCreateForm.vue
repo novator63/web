@@ -33,7 +33,13 @@
 			/>
 		</div>
 		<div :class="$style.actions">
-			<BaseButton v-if="mode === 'edit'" type="button" variant="ghost" :disabled="disabled" @click="$emit('cancel')">
+			<BaseButton
+				v-if="mode === 'edit'"
+				type="button"
+				variant="ghost"
+				:disabled="disabled"
+				@click="$emit('cancel')"
+			>
 				Отмена
 			</BaseButton>
 			<BaseButton type="submit" :disabled="disabled || !canSubmit">{{ submitText }}</BaseButton>

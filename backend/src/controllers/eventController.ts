@@ -124,8 +124,7 @@ export const createEvent = async (
   res: Response,
 ): Promise<Response | void> => {
   try {
-    if (!req.user?.id)
-      return res.status(401).json({ message: 'Unauthorized' });
+    if (!req.user?.id) return res.status(401).json({ message: 'Unauthorized' });
 
     const validated = validateEventBody(req.body as EventBody);
     if ('message' in validated) {

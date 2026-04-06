@@ -30,6 +30,9 @@ export const useAuthStore = defineStore('auth', {
 			this.isAuthenticated = Boolean(token)
 			this.user = token ? getUserFromToken(token) : null
 		},
+		setUser(user: User | null): void {
+			this.user = user
+		},
 		async logout(): Promise<string> {
 			this.isLoggingOut = true
 

@@ -15,7 +15,11 @@
 					<thead>
 						<tr>
 							<th>ID</th>
+							<th>Фамилия</th>
 							<th>Имя</th>
+							<th>Отчество</th>
+							<th>Пол</th>
+							<th>Дата рождения</th>
 							<th>Email</th>
 							<th>Хэш пароля</th>
 							<th>Дата регистрации</th>
@@ -24,7 +28,11 @@
 					<tbody>
 						<tr v-for="user in users" :key="user.id">
 							<td>{{ user.id }}</td>
-							<td>{{ user.name }}</td>
+							<td>{{ user.lastName }}</td>
+							<td>{{ user.firstName }}</td>
+							<td>{{ user.middleName ?? '—' }}</td>
+							<td>{{ formatGender(user.gender) }}</td>
+							<td>{{ formatBirthDate(user.birthDate) }}</td>
 							<td>{{ user.email }}</td>
 							<td :class="$style.hash">{{ user.password ?? 'null' }}</td>
 							<td>{{ formatCreatedAt(user.createdAt) }}</td>
@@ -52,6 +60,17 @@ const formatCreatedAt = (value?: string): string => {
 	const date = new Date(value)
 	if (Number.isNaN(date.getTime())) return '—'
 	return date.toLocaleString('ru-RU')
+}
+
+const formatBirthDate = (value: string): string => {
+	const date = new Date(value)
+	if (Number.isNaN(date.getTime())) return '—'
+	return date.toLocaleDateString('ru-RU')
+}
+
+const formatGender = (value: string): string => {
+	if (value === 'male') return 'Мужской'
+	return 'Женский'
 }
 
 const loadUsers = async (): Promise<void> => {

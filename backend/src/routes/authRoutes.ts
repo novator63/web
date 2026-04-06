@@ -25,9 +25,24 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               firstName:
  *                 type: string
- *                 example: Alice
+ *                 example: Ivan
+ *               lastName:
+ *                 type: string
+ *                 example: Ivanov
+ *               middleName:
+ *                 type: string
+ *                 nullable: true
+ *                 example: Ivanovich
+ *               gender:
+ *                 type: string
+ *                 enum: [male, female]
+ *                 example: male
+ *               birthDate:
+ *                 type: string
+ *                 format: date
+ *                 example: 2000-05-21
  *               email:
  *                 type: string
  *                 format: email
@@ -35,7 +50,7 @@ const router = express.Router();
  *               password:
  *                 type: string
  *                 example: qwerty123
- *             required: [name, email, password]
+ *             required: [firstName, lastName, gender, birthDate, email, password]
  *     responses:
  *       201:
  *         description: Registration successful

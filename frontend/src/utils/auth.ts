@@ -27,7 +27,12 @@ export const getUserFromToken = (token: string): User | null => {
 	if (
 		typeof payload.id !== 'number' ||
 		typeof payload.email !== 'string' ||
-		typeof payload.name !== 'string'
+		typeof payload.name !== 'string' ||
+		typeof payload.firstName !== 'string' ||
+		typeof payload.lastName !== 'string' ||
+		(payload.middleName !== null && typeof payload.middleName !== 'string') ||
+		typeof payload.gender !== 'string' ||
+		typeof payload.birthDate !== 'string'
 	) {
 		return null
 	}
@@ -35,5 +40,10 @@ export const getUserFromToken = (token: string): User | null => {
 		id: payload.id,
 		email: payload.email,
 		name: payload.name,
+		firstName: payload.firstName,
+		lastName: payload.lastName,
+		middleName: payload.middleName,
+		gender: payload.gender,
+		birthDate: payload.birthDate,
 	}
 }

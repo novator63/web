@@ -60,6 +60,23 @@ const options = {
           properties: {
             id: { type: 'integer', example: 1 },
             name: { type: 'string', example: 'Alice' },
+            firstName: { type: 'string', example: 'Ivan' },
+            lastName: { type: 'string', example: 'Ivanov' },
+            middleName: {
+              type: 'string',
+              nullable: true,
+              example: 'Ivanovich',
+            },
+            gender: {
+              type: 'string',
+              enum: ['male', 'female'],
+              example: 'male',
+            },
+            birthDate: {
+              type: 'string',
+              format: 'date',
+              example: '2000-05-21',
+            },
             email: {
               type: 'string',
               format: 'email',
@@ -71,7 +88,16 @@ const options = {
               example: '2026-03-27T10:00:00.000Z',
             },
           },
-          required: ['id', 'name', 'email', 'createdAt'],
+          required: [
+            'id',
+            'name',
+            'firstName',
+            'lastName',
+            'gender',
+            'birthDate',
+            'email',
+            'createdAt',
+          ],
         },
         Event: {
           type: 'object',

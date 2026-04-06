@@ -10,9 +10,7 @@
 			<div :class="$style.eventsHeader">
 				<div>
 					<h2 :class="$style.sectionTitle">Все события</h2>
-					<p :class="$style.sectionNote">
-						Редактирование достпуно только в разделе событий.
-					</p>
+					<p :class="$style.sectionNote">Редактирование достпуно только в разделе событий.</p>
 				</div>
 				<div :class="$style.searchActions">
 					<BaseInput

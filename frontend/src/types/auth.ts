@@ -1,4 +1,4 @@
-import type { User } from './user'
+import type { User, UserGender } from './user'
 
 export interface LoginPayload {
 	email: string
@@ -6,7 +6,11 @@ export interface LoginPayload {
 }
 
 export interface RegisterPayload {
-	name: string
+	firstName: string
+	lastName: string
+	middleName?: string
+	gender: UserGender
+	birthDate: string
 	email: string
 	password: string
 }
