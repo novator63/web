@@ -1,0 +1,51 @@
+@use '../../assets/styles/mixins.scss' as *;
+@use '../../assets/styles/variables.scss' as *;
+
+.root {
+	display: grid;
+	gap: 14px;
+}
+
+.card {
+	@include card;
+	padding: 16px;
+	display: grid;
+	gap: 12px;
+}
+
+.title {
+	margin: 0;
+	font-size: 24px;
+}
+
+.subtitle {
+	margin: 0;
+	font-size: 20px;
+}
+
+.eventsHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.userInfo {
+	display: grid;
+	gap: 8px;
+}
+
+.row {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	font-size: 16px;
+}
+
+.label {
+	color: $color-muted;
+	min-width: 52px;
+}
+
+.state {
+	color: $color-muted;
+}

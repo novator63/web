@@ -24,6 +24,14 @@
 					<RouterLink to="/" :class="$style.link" @click="closeMenu">Главная</RouterLink>
 					<RouterLink to="/events" :class="$style.link" @click="closeMenu">События</RouterLink>
 					<RouterLink
+						v-if="authStore.isAuthenticated"
+						to="/profile"
+						:class="$style.link"
+						@click="closeMenu"
+					>
+						Профиль
+					</RouterLink>
+					<RouterLink
 						v-if="authStore.isAuthenticated && authStore.isAdmin"
 						to="/users"
 						:class="$style.link"
