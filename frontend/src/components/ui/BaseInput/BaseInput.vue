@@ -11,6 +11,7 @@
 			:disabled="disabled"
 			:class="[$style.input, error ? $style.invalid : undefined]"
 			:aria-invalid="Boolean(error)"
+			v-bind="$attrs"
 			@input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
 		/>
 		<span v-if="error" :class="$style.error">{{ error }}</span>
@@ -18,6 +19,8 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ inheritAttrs: false })
+
 withDefaults(
 	defineProps<{
 		modelValue: string

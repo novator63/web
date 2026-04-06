@@ -1,4 +1,5 @@
 @use '../../assets/styles/mixins.scss' as *;
+@use '../../assets/styles/variables.scss' as *;
 
 .root {
 	display: grid;
@@ -8,4 +9,28 @@
 .section {
 	@include card;
 	padding: 16px;
+}
+
+.modalBackdrop {
+	position: fixed;
+	inset: 0;
+	z-index: 30;
+	background: rgba(0, 0, 0, 0.45);
+	display: grid;
+	place-items: center;
+	padding: 20px;
+}
+
+.modalCard {
+	@include card;
+	width: min(760px, 100%);
+	padding: 16px;
+	border: 1px solid $color-border;
+	display: grid;
+	gap: 12px;
+}
+
+.modalTitle {
+	margin: 0;
+	font-size: 22px;
 }

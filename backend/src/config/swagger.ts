@@ -83,6 +83,10 @@ const options = {
               nullable: true,
               example: 'Discuss Q2 goals',
             },
+            category: {
+              type: 'string',
+              example: 'local meetup',
+            },
             date: {
               type: 'string',
               format: 'date-time',
@@ -103,6 +107,7 @@ const options = {
           required: [
             'id',
             'title',
+            'category',
             'date',
             'createdBy',
             'createdAt',

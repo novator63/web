@@ -14,6 +14,7 @@ class Event extends Model<
   declare id: CreationOptional<number>;
   declare title: string;
   declare description: string | null;
+  declare category: string;
   declare date: Date;
   declare createdBy: number;
   declare createdAt: CreationOptional<Date>;
@@ -33,6 +34,11 @@ Event.init(
     description: {
       type: DataTypes.TEXT,
       allowNull: true,
+    },
+    category: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'other',
     },
     date: {
       type: DataTypes.DATE,

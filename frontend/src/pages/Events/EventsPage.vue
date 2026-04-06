@@ -16,7 +16,7 @@
 		<section v-if="info" :class="$style.section">{{ info }}</section>
 
 		<section v-if="authStore.isAuthenticated" :class="$style.section">
-			<EventCreateForm :disabled="creating" @submit="handleCreate" />
+			<EventCreateForm mode="create" :disabled="creating" @submit="handleCreate" />
 		</section>
 
 		<section :class="$style.section">
@@ -28,8 +28,27 @@
 				:current-user-id="authStore.user?.id ?? null"
 				:deleting-id="deletingId"
 				@delete="handleDelete"
+				@edit="openEditModal"
 			/>
 		</section>
+
+		<div v-if="editingEvent" :class="$style.modalBackdrop" @click.self="closeEditModal">
+			<section :class="$style.modalCard">
+				<h2 :class="$style.modalTitle">Редактирование мероприятия</h2>
+				<EventCreateForm
+					mode="edit"
+					:disabled="updating"
+					:initial-values="{
+						title: editingEvent.title,
+						description: editingEvent.description,
+						date: editingEvent.date,
+						category: editingEvent.category,
+					}"
+					@submit="handleUpdate"
+					@cancel="closeEditModal"
+				/>
+			</section>
+		</div>
 	</div>
 </template>
 
@@ -51,7 +70,9 @@ const authStore = useAuthStore()
 const events = ref<EventItem[]>([])
 const loading = ref(false)
 const creating = ref(false)
+const updating = ref(false)
 const deletingId = ref<number | null>(null)
+const editingEvent = ref<EventItem | null>(null)
 const error = ref<UiError | null>(null)
 const info = ref('')
 const searchQuery = ref('')
@@ -125,6 +146,39 @@ const handleDelete = async (id: number): Promise<void> => {
 		error.value = getErrorMessage(e, 'Не удалось удалить событие')
 	} finally {
 		deletingId.value = null
+	}
+}
+
+const openEditModal = (event: EventItem): void => {
+	error.value = null
+	info.value = ''
+	editingEvent.value = event
+}
+
+const closeEditModal = (): void => {
+	if (updating.value) {
+		return
+	}
+
+	editingEvent.value = null
+}
+
+const handleUpdate = async (payload: EventPayload): Promise<void> => {
+	if (!editingEvent.value) return
+
+	updating.value = true
+	error.value = null
+	info.value = ''
+
+	try {
+		await eventService.updateEvent(editingEvent.value.id, payload)
+		info.value = 'Событие обновлено'
+		editingEvent.value = null
+		await loadEvents()
+	} catch (e) {
+		error.value = getErrorMessage(e, 'Не удалось обновить событие')
+	} finally {
+		updating.value = false
 	}
 }
 

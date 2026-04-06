@@ -31,7 +31,7 @@ const router = express.Router();
  *         schema:
  *           type: string
  *         required: false
- *         description: Search by title or description
+ *         description: Search by title, description or category
  *         example: meetup
  *     responses:
  *       200:
@@ -108,11 +108,14 @@ router.get('/:id', getEventById);
  *                 type: string
  *                 nullable: true
  *                 example: Discuss project milestones
+ *               category:
+ *                 type: string
+ *                 example: open air
  *               date:
  *                 type: string
  *                 format: date-time
  *                 example: 2026-04-15T18:30:00.000Z
- *             required: [title, date]
+ *             required: [title, category, date]
  *     responses:
  *       201:
  *         description: Event created
@@ -164,11 +167,14 @@ router.post(
  *                 type: string
  *                 nullable: true
  *                 example: New agenda
+ *               category:
+ *                 type: string
+ *                 example: local meetup
  *               date:
  *                 type: string
  *                 format: date-time
  *                 example: 2026-04-20T17:00:00.000Z
- *             required: [title, date]
+ *             required: [title, category, date]
  *     responses:
  *       200:
  *         description: Event updated

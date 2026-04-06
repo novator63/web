@@ -26,6 +26,16 @@
 	white-space: nowrap;
 }
 
+.category {
+	justify-self: start;
+	font-size: 12px;
+	padding: 4px 8px;
+	border: 1px solid $color-border;
+	border-radius: 999px;
+	color: $color-muted;
+	background: rgba(255, 255, 255, 0.55);
+}
+
 .desc {
 	margin: 0;
 	color: $color-muted;
