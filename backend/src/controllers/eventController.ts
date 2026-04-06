@@ -1,6 +1,5 @@
 import { Op } from 'sequelize';
 import type { Request, Response } from 'express';
-import { getAdminEmails } from '@config/env.js';
 import { Event as EventModel } from '@models/index.js';
 
 interface EventBody {
@@ -14,24 +13,15 @@ export const getAllEvents = async (
   res: Response,
 ): Promise<Response | void> => {
   try {
-    const userId = req.user?.id;
-    const userEmail = req.user?.email?.toLowerCase();
-    if (!userId) return res.status(401).json({ message: 'Unauthorized' });
-
-    const isAdmin = Boolean(userEmail && getAdminEmails().includes(userEmail));
-
-    const search = req.query.search;
-    const whereClause = {
-      ...(isAdmin ? {} : { createdBy: userId }),
-      ...(search
-        ? {
-            [Op.or]: [
-              { title: { [Op.iLike]: `%${search}%` } },
-              { description: { [Op.iLike]: `%${search}%` } },
-            ],
-          }
-        : {}),
-    };
+    const search = typeof req.query.search === 'string' ? req.query.search : '';
+    const whereClause = search
+      ? {
+          [Op.or]: [
+            { title: { [Op.iLike]: `%${search}%` } },
+            { description: { [Op.iLike]: `%${search}%` } },
+          ],
+        }
+      : {};
     const events = await EventModel.findAll({
       where: whereClause,
       order: [
@@ -50,11 +40,8 @@ export const getEventById = async (
   res: Response,
 ): Promise<Response | void> => {
   try {
-    const userId = req.user?.id;
-    if (!userId) return res.status(401).json({ message: 'Unauthorized' });
-
     const event = await EventModel.findOne({
-      where: { id: Number(req.params.id), createdBy: userId },
+      where: { id: Number(req.params.id) },
     });
     if (!event) return res.status(404).json({ message: 'Event not found' });
     return res.status(200).json(event);

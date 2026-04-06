@@ -4,11 +4,20 @@
 .root {
 	@include card;
 	padding: 12px 14px;
+	display: flex;
+	justify-content: space-between;
+	gap: 10px;
+	align-items: flex-start;
+	border-color: rgba(164, 65, 65, 0.35);
+}
+
+.content {
 	display: grid;
 	grid-template-columns: auto 1fr;
 	gap: 10px;
 	align-items: start;
-	border-color: rgba(164, 65, 65, 0.35);
+	min-width: 0;
+	flex: 1 1 auto;
 }
 
 .code {
@@ -27,4 +36,27 @@
 .message {
 	font-size: 14px;
 	color: $color-text;
+}
+
+.gifWrap {
+	flex: 0 0 min(320px, 40vw);
+	max-width: 320px;
+	overflow: hidden;
+	border-radius: 14px;
+}
+
+@media (max-width: 720px) {
+	.root {
+		flex-direction: column;
+	}
+
+	.content {
+		width: 100%;
+	}
+
+	.gifWrap {
+		max-width: 100%;
+		width: 100%;
+		flex-basis: auto;
+	}
 }

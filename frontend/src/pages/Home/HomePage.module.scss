@@ -10,3 +10,21 @@
 	@include card;
 	padding: 18px;
 }
+
+.eventsHeader {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 14px;
+}
+
+.sectionTitle {
+	margin: 0;
+	font-size: 20px;
+}
+
+.sectionNote {
+	margin: 6px 0 0;
+	color: $color-muted;
+	line-height: 1.5;
+}

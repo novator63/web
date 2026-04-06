@@ -21,10 +21,10 @@
 
 		<section :class="$style.section">
 			<div v-if="loading">Загрузка…</div>
-			<div v-else-if="events.length === 0">Пока нет событий.</div>
+			<div v-else-if="visibleEvents.length === 0">Пока нет событий.</div>
 			<EventList
 				v-else
-				:events="events"
+				:events="visibleEvents"
 				:current-user-id="authStore.user?.id ?? null"
 				:deleting-id="deletingId"
 				@delete="handleDelete"
@@ -56,6 +56,14 @@ const error = ref<UiError | null>(null)
 const info = ref('')
 const searchQuery = ref('')
 const normalizedSearch = computed(() => searchQuery.value.trim())
+const visibleEvents = computed(() => {
+	const currentUserId = authStore.user?.id
+	if (!currentUserId) {
+		return []
+	}
+
+	return events.value.filter((event) => event.createdBy === currentUserId)
+})
 
 let searchDebounceTimer: ReturnType<typeof setTimeout> | null = null
 
