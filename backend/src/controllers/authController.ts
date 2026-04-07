@@ -76,10 +76,7 @@ export const register = async (
     return res.status(400).json({ message: 'Fill in all fields' });
   }
 
-  if (
-    !isValidName(firstNameNormalized) ||
-    !isValidName(lastNameNormalized)
-  ) {
+  if (!isValidName(firstNameNormalized) || !isValidName(lastNameNormalized)) {
     return res.status(400).json({
       message: `First name and last name length must be between ${NAME_MIN_LENGTH} and ${NAME_MAX_LENGTH} characters`,
     });

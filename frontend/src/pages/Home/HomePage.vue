@@ -17,80 +17,63 @@
 						id="home-events-search"
 						placeholder="Поиск по названию, описанию и типу"
 						:model-value="searchQuery"
-						:disabled="loading"
-						@update:model-value="searchQuery = $event"
+						:disabled="eventsStore.loading"
+						@update:model-value="handleSearchUpdate"
 					/>
 					<div :class="$style.buttons">
-						<BaseButton variant="ghost" :disabled="loading" @click="searchQuery = ''">
+						<BaseButton
+							variant="ghost"
+							:disabled="eventsStore.loading"
+							@click="handleSearchUpdate('')"
+						>
 							Очистить
 						</BaseButton>
-						<BaseButton variant="secondary" :disabled="loading" @click="loadEvents">
-							{{ loading ? 'Загрузка…' : 'Обновить' }}
+						<BaseButton variant="secondary" :disabled="eventsStore.loading" @click="reloadEvents">
+							{{ eventsStore.loading ? 'Загрузка…' : 'Обновить' }}
 						</BaseButton>
 					</div>
 				</div>
 			</div>
-			<ErrorMessage v-if="error" :code="error.code" :message="error.message" />
-			<div v-else-if="loading">Загрузка…</div>
-			<div v-else-if="events.length === 0">Пока нет событий.</div>
-			<EventList v-else :events="events" :current-user-id="null" :deleting-id="null" />
+			<ErrorMessage
+				v-if="eventsStore.error"
+				:code="eventsStore.error.code"
+				:message="eventsStore.error.message"
+			/>
+			<div v-else-if="eventsStore.loading">Загрузка…</div>
+			<div v-else-if="eventsStore.events.length === 0">Пока нет событий.</div>
+			<EventList v-else :events="eventsStore.events" :current-user-id="null" :deleting-id="null" />
 		</section>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onMounted } from 'vue'
 
-import { eventService } from '../../api/eventService'
 import BaseButton from '../../components/ui/BaseButton/BaseButton.vue'
 import BaseInput from '../../components/ui/BaseInput/BaseInput.vue'
 import ErrorMessage from '../../components/ui/ErrorMessage/ErrorMessage.vue'
-import type { UiError } from '../../types/api'
-import type { EventItem } from '../../types/event'
-import { getErrorMessage } from '../../utils/getErrorMessage'
+import { useEventsStore } from '../../stores/eventsStore'
 import EventList from '../Events/components/EventList.vue'
 import HomeActions from './components/HomeActions.vue'
 import HomeHero from './components/HomeHero.vue'
 
-const events = ref<EventItem[]>([])
-const loading = ref(false)
-const error = ref<UiError | null>(null)
-const searchQuery = ref('')
-const normalizedSearch = computed(() => searchQuery.value.trim())
+const eventsStore = useEventsStore()
 
-let searchDebounceTimer: ReturnType<typeof setTimeout> | null = null
+const searchQuery = computed({
+	get: () => eventsStore.searchQuery,
+	set: (value: string) => eventsStore.setSearchQuery(value),
+})
 
-const loadEvents = async (): Promise<void> => {
-	loading.value = true
-	error.value = null
-
-	try {
-		events.value = await eventService.getEvents(normalizedSearch.value)
-	} catch (e) {
-		error.value = getErrorMessage(e, 'Не удалось загрузить события')
-	} finally {
-		loading.value = false
-	}
+const handleSearchUpdate = (value: string): void => {
+	eventsStore.setSearchQuery(value)
 }
 
-watch(searchQuery, () => {
-	if (searchDebounceTimer) {
-		clearTimeout(searchDebounceTimer)
-	}
-
-	searchDebounceTimer = setTimeout(() => {
-		void loadEvents()
-	}, 500)
-})
-
-onBeforeUnmount(() => {
-	if (searchDebounceTimer) {
-		clearTimeout(searchDebounceTimer)
-	}
-})
+const reloadEvents = async (): Promise<void> => {
+	await eventsStore.loadEvents(eventsStore.searchQuery)
+}
 
 onMounted(() => {
-	void loadEvents()
+	void eventsStore.loadEvents(eventsStore.searchQuery)
 })
 </script>
 

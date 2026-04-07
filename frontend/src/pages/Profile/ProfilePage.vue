@@ -76,7 +76,9 @@
 							<option value="male">Мужской</option>
 							<option value="female">Женский</option>
 						</select>
-						<span v-if="fieldErrors.gender" :class="$style.fieldError">{{ fieldErrors.gender }}</span>
+						<span v-if="fieldErrors.gender" :class="$style.fieldError">{{
+							fieldErrors.gender
+						}}</span>
 					</label>
 
 					<BaseInput

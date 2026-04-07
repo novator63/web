@@ -6,9 +6,11 @@
 				<p :class="$style.subtitle">Список зарегистрированных пользователей и хэши их паролей</p>
 			</div>
 
-			<div v-if="loading" :class="$style.state">Загрузка…</div>
-			<div v-else-if="error" :class="$style.error">{{ error }}</div>
-			<div v-else-if="users.length === 0" :class="$style.state">Пользователи не найдены.</div>
+			<div v-if="usersStore.loading" :class="$style.state">Загрузка…</div>
+			<div v-else-if="usersStore.error" :class="$style.error">{{ usersStore.error }}</div>
+			<div v-else-if="usersStore.users.length === 0" :class="$style.state">
+				Пользователи не найдены.
+			</div>
 
 			<div v-else :class="$style.tableWrap">
 				<table :class="$style.table">
@@ -26,7 +28,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="user in users" :key="user.id">
+						<tr v-for="user in usersStore.users" :key="user.id">
 							<td>{{ user.id }}</td>
 							<td>{{ user.lastName }}</td>
 							<td>{{ user.firstName }}</td>
@@ -45,15 +47,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 
-import { userService } from '../../api/userService'
-import type { RegisteredUser } from '../../types/user'
-import { getErrorMessage } from '../../utils/getErrorMessage'
+import { useUsersStore } from '../../stores/usersStore'
 
-const users = ref<RegisteredUser[]>([])
-const loading = ref(false)
-const error = ref('')
+const usersStore = useUsersStore()
 
 const formatCreatedAt = (value?: string): string => {
 	if (!value) return '—'
@@ -72,22 +70,8 @@ const formatGender = (value: string): string => {
 	if (value === 'male') return 'Мужской'
 	return 'Женский'
 }
-
-const loadUsers = async (): Promise<void> => {
-	loading.value = true
-	error.value = ''
-
-	try {
-		users.value = await userService.getAllUsers()
-	} catch (e) {
-		error.value = getErrorMessage(e, 'Не удалось загрузить пользователей').message
-	} finally {
-		loading.value = false
-	}
-}
-
 onMounted(() => {
-	void loadUsers()
+	void usersStore.loadUsers()
 })
 </script>
 

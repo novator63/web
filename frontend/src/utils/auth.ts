@@ -6,7 +6,8 @@ const decodeBase64Url = (value: string): string => {
 		.replace(/-/g, '+')
 		.replace(/_/g, '/')
 		.padEnd(Math.ceil(value.length / 4) * 4, '=')
-	return atob(padded)
+	const bytes = Uint8Array.from(atob(padded), (character) => character.charCodeAt(0))
+	return new TextDecoder('utf-8').decode(bytes)
 }
 
 export const parseJwtPayload = <T>(token: string): T | null => {
