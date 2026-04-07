@@ -129,23 +129,18 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
 
-import { eventService } from '../../api/eventService'
-import { userService } from '../../api/userService'
 import BaseButton from '../../components/ui/BaseButton/BaseButton.vue'
 import BaseInput from '../../components/ui/BaseInput/BaseInput.vue'
 import ErrorMessage from '../../components/ui/ErrorMessage/ErrorMessage.vue'
 import { useAuthStore } from '../../stores/authStore'
+import { useEventsStore } from '../../stores/eventsStore'
 import type { UiError } from '../../types/api'
-import type { EventItem } from '../../types/event'
 import type { UserGender } from '../../types/user'
 import { getErrorMessage } from '../../utils/getErrorMessage'
 import EventList from '../Events/components/EventList.vue'
 
 const authStore = useAuthStore()
-
-const events = ref<EventItem[]>([])
-const loading = ref(false)
-const error = ref<UiError | null>(null)
+const eventsStore = useEventsStore()
 
 const profileLoading = ref(false)
 const profileSaving = ref(false)
@@ -175,20 +170,7 @@ const visibleEvents = computed(() => {
 		return []
 	}
 
-	return events.value.filter((event) => event.createdBy === currentUserId)
-})
-
-const loadEvents = async (): Promise<void> => {
-	loading.value = true
-	error.value = null
-
-	try {
-		events.value = await eventService.getEvents()
-	} catch (e) {
-		error.value = getErrorMessage(e, 'Не удалось загрузить мероприятия')
-	} finally {
-		loading.value = false
-	}
+	return eventsStore.events.filter((event) => event.createdBy === currentUserId)
 }
 
 const setFormFromStore = (): void => {
@@ -295,8 +277,7 @@ const loadProfile = async (): Promise<void> => {
 	profileError.value = null
 
 	try {
-		const profile = await userService.getMyProfile()
-		authStore.setUser(profile)
+		await authStore.loadMyProfile()
 		setFormFromStore()
 	} catch (e) {
 		profileError.value = getErrorMessage(e, 'Не удалось загрузить профиль')
@@ -318,14 +299,13 @@ const submitProfile = async (): Promise<void> => {
 	profileSaving.value = true
 
 	try {
-		const updatedProfile = await userService.updateMyProfile({
+		await authStore.updateMyProfile({
 			firstName: form.firstName.trim(),
 			lastName: form.lastName.trim(),
 			middleName: form.middleName.trim() || undefined,
 			gender: form.gender,
 			birthDate: form.birthDate,
 		})
-		authStore.setUser(updatedProfile)
 		setFormFromStore()
 		profileSuccess.value = 'Профиль успешно обновлён'
 		isEditing.value = false
@@ -340,7 +320,7 @@ onMounted(() => {
 	authStore.syncAuthState()
 	setFormFromStore()
 	void loadProfile()
-	void loadEvents()
+	void eventsStore.loadEvents(eventsStore.searchQuery)
 })
 </script>
 

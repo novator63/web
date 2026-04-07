@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 
 import { authService } from '../api/authService'
-import type { User } from '../types/user'
+import { userService } from '../api/userService'
+import type { UpdateProfilePayload, User } from '../types/user'
 import { isAdminEmail } from '../utils/admin'
 import { getToken, hasToken } from '../utils/token'
 import { getUserFromToken } from '../utils/auth'
@@ -33,6 +34,16 @@ export const useAuthStore = defineStore('auth', {
 		setUser(user: User | null): void {
 			this.user = user
 		},
+			async loadMyProfile(): Promise<User> {
+				const profile = await userService.getMyProfile()
+				this.user = profile
+				return profile
+			},
+			async updateMyProfile(payload: UpdateProfilePayload): Promise<User> {
+				const updatedProfile = await userService.updateMyProfile(payload)
+				this.user = updatedProfile
+				return updatedProfile
+			},
 		async logout(): Promise<string> {
 			this.isLoggingOut = true
 
